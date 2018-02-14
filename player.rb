@@ -1,9 +1,10 @@
 class Player
-  attr_reader :balance, :score, :cards
+  attr_reader :name
+  attr_accessor :balance, :cards
 
-  def initialize
+  def initialize(name)
+    @name = name
     @balance = 100
-    @score = 0
     @cards = []
   end
 end
