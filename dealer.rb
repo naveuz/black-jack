@@ -1,3 +1,1 @@
-class Dealer < Player
-
-end
+class Dealer < Player; end

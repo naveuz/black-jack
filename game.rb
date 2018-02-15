@@ -66,7 +66,7 @@ class Game
 
     winner =
       if user_score > dealer_score && user_score <= 21 ||
-          user_score == 21 && dealer_score > 21
+         user_score == 21 && dealer_score > 21
         user
       elsif dealer_score > user_score && dealer_score <= 21 ||
             dealer_score == 21 && user_score > 21
@@ -107,13 +107,12 @@ class Game
   def cards_scoring(player)
     score = 0
     player.cards.each do |card|
-      value =
-        if card.value == 'A'
-          score > 10 ? 1 : 11
-        else
-          card.value.to_i
-        end
-      score += (1..11).include?(value) ? value : 10
+      value = if card.value == 'A'
+                score > 10 ? 1 : 11
+              else
+                card.value.to_i
+              end
+      score += (1..11).cover?(value) ? value : 10
     end
     score
   end

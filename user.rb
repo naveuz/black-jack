@@ -1,3 +1,1 @@
-class User < Player
-
-end
+class User < Player; end
