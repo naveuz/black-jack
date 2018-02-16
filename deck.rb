@@ -21,8 +21,7 @@ class Deck
   end
 
   def random_card
-    idx = rand(cards.size)
-    cards.delete_at(idx)
+    cards.sample
   end
 
   def add_cards(deck_card)
@@ -39,5 +38,12 @@ class Deck
                end
     end
     score
+  end
+
+  def to_s
+    print 'карты-'
+    cards.each { |card| print "#{card.value}#{card.suit} " }
+    print 'очки-'
+    puts cards_scoring
   end
 end

@@ -23,7 +23,7 @@ class Game
     end
 
     puts "#{user.name}:"
-    print_out_cards(user)
+    puts user.deck
 
     puts "#{dealer.name}:"
     puts 'карты-***** очки-*****'
@@ -46,9 +46,7 @@ class Game
         puts "#{current_player.name} пропустил ход."
         current_player = rotate(current_player)
       when '2'
-        1.times do
-          current_player.deck.add_cards(deck.random_card)
-        end
+        current_player.deck.add_cards(deck.random_card)
         puts "#{current_player.name} добавил карту."
         current_player = rotate(current_player)
       when '3'
@@ -60,25 +58,15 @@ class Game
 
     puts 'Открываем карты:'
     puts "#{user.name}:"
-    print_out_cards(user)
+    puts user.deck
 
     puts "#{dealer.name}:"
-    print_out_cards(dealer)
+    puts dealer.deck
 
     user_score = user.deck.cards_scoring
     dealer_score = dealer.deck.cards_scoring
 
-    winner =
-      if user_score > dealer_score && user_score <= 21 ||
-         user_score <= 21 && dealer_score > 21
-        user
-      elsif dealer_score > user_score && dealer_score <= 21 ||
-            dealer_score <= 21 && user_score > 21
-        dealer
-      elsif user_score > 21 && dealer_score > 21 ||
-            user_score == dealer_score
-        false
-      end
+    winner = select_winner(user_score, dealer_score)
 
     pay_to_player(winner)
 
@@ -126,10 +114,16 @@ class Game
     gets.chomp
   end
 
-  def print_out_cards(player)
-    print 'карты-'
-    player.deck.cards.each { |card| print "#{card.value}#{card.suit} " }
-    print 'очки-'
-    puts player.deck.cards_scoring
+  def select_winner(user_score, dealer_score)
+    if user_score > dealer_score && user_score <= 21 ||
+       user_score <= 21 && dealer_score > 21
+      user
+    elsif dealer_score > user_score && dealer_score <= 21 ||
+          dealer_score <= 21 && user_score > 21
+      dealer
+    elsif user_score > 21 && dealer_score > 21 ||
+          user_score == dealer_score
+      nil
+    end
   end
 end
