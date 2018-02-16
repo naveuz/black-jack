@@ -9,9 +9,9 @@ puts 'Как ваше имя?'
 
 name = gets.chomp
 
-game = Game.new(User.new(name), Dealer.new('Дилер'))
-
 loop do
+  game = Game.new(Deck.new, User.new(name), Dealer.new('Дилер'))
+
   game.run
 
   puts 'Хотите сыграть еще раз? (да/нет)'
