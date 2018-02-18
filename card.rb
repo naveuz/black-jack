@@ -6,4 +6,8 @@ class Card
     @suit = suit
     @score = score
   end
+
+  def to_s
+    "#{value}#{suit}"
+  end
 end

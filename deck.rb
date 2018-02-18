@@ -41,9 +41,6 @@ class Deck
   end
 
   def to_s
-    print 'карты-'
-    cards.each { |card| print "#{card.value}#{card.suit} " }
-    print 'очки-'
-    puts cards_scoring
+    "карты-#{cards.join(',')} очки-#{cards_scoring}"
   end
 end
