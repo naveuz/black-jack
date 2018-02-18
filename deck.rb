@@ -28,6 +28,10 @@ class Deck
     cards << deck_card
   end
 
+  def remove_cards
+    @cards = []
+  end
+
   def cards_scoring
     score = 0
     cards.each do |card|

@@ -1,19 +1,21 @@
 class Game
-  attr_reader :deck, :user, :dealer
-  attr_accessor :bank
+  attr_reader :deck, :user, :dealer, :bank
 
-  def initialize(deck, user, dealer)
-    @deck = deck
+  def initialize(user, dealer)
+    @deck = Deck.new
     @user = user
     @dealer = dealer
-    @bank = 0
+    @bank = Bank.new
   end
 
   def run
+    user.deck.remove_cards
+    dealer.deck.remove_cards
+
     deck.fill_cards
 
-    check_balance(user)
-    check_balance(dealer)
+    bank.check_balance(user)
+    bank.check_balance(dealer)
 
     puts 'Раздача карт:'
 
@@ -28,7 +30,8 @@ class Game
     puts "#{dealer.name}:"
     puts 'карты-***** очки-*****'
 
-    pay_to_bank
+    bank.pay_to_bank(user)
+    bank.pay_to_bank(dealer)
 
     current_player = user
 
@@ -68,37 +71,19 @@ class Game
 
     winner = select_winner(user_score, dealer_score)
 
-    pay_to_player(winner)
-
     if winner
+      bank.pay_to_winner(winner)
       puts "Победитель: #{winner.name}"
     else
+      bank.pay_to_player(user)
+      bank.pay_to_player(dealer)
       puts 'Победитель не выявлен, ничья.'
     end
+    puts user.balance
+    puts dealer.balance
   end
 
   private
-
-  def pay_to_bank
-    user.balance -= 10
-    dealer.balance -= 10
-    self.bank += 20
-  end
-
-  def pay_to_player(winner)
-    if winner
-      winner.balance += bank
-      self.bank = 0
-    else
-      user.balance += 10
-      dealer.balance += 10
-      self.bank -= 20
-    end
-  end
-
-  def check_balance(player)
-    raise "Не достаточно средств #{player.name}." if player.balance < 10
-  end
 
   def rotate(player)
     player == user ? dealer : user
