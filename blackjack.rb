@@ -5,11 +5,10 @@ require_relative 'user'
 require_relative 'dealer'
 require_relative 'bank'
 require_relative 'game'
+require_relative 'interface'
 
-puts 'Как ваше имя?'
-
-name = gets.chomp
-user = User.new(name)
+interface = Interface.new
+user = User.new(interface.select_name)
 dealer = Dealer.new('Дилер')
 
 loop do
@@ -17,6 +16,5 @@ loop do
 
   game.run
 
-  puts 'Хотите сыграть еще раз? (да/нет)'
-  break if gets.chomp == 'нет'
+  break if interface.repeat_game == 'нет'
 end

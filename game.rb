@@ -1,11 +1,12 @@
 class Game
-  attr_reader :deck, :user, :dealer, :bank
+  attr_reader :deck, :user, :dealer, :bank, :interface
 
   def initialize(user, dealer)
     @deck = Deck.new
     @user = user
     @dealer = dealer
     @bank = Bank.new
+    @interface = Interface.new
   end
 
   def run
@@ -17,18 +18,13 @@ class Game
     bank.check_balance(user)
     bank.check_balance(dealer)
 
-    puts 'Раздача карт:'
-
+    interface.take_cards
     2.times do
       user.deck.add_cards(deck.random_card)
       dealer.deck.add_cards(deck.random_card)
     end
-
-    puts "#{user.name}:"
-    puts user.deck
-
-    puts "#{dealer.name}:"
-    puts 'карты-***** очки-*****'
+    interface.print_cards(user)
+    interface.print_cards_hidden(dealer)
 
     bank.pay_to_bank(user)
     bank.pay_to_bank(dealer)
@@ -38,7 +34,7 @@ class Game
     loop do
       if current_player.is_a? User
         break if user.deck.cards.size == 3
-        action = select_action
+        action = interface.select_action
       end
       if current_player.is_a? Dealer
         score = dealer.deck.cards_scoring
@@ -46,25 +42,22 @@ class Game
       end
       case action
       when '1'
-        puts "#{current_player.name} пропустил ход."
+        interface.skip_step(current_player)
         current_player = rotate(current_player)
       when '2'
         current_player.deck.add_cards(deck.random_card)
-        puts "#{current_player.name} добавил карту."
+        interface.added_card(current_player)
         current_player = rotate(current_player)
       when '3'
         break
       else
-        puts 'Неверное действие. Попробуйте еще раз.'
+        interface.wrong_action
       end
     end
 
-    puts 'Открываем карты:'
-    puts "#{user.name}:"
-    puts user.deck
-
-    puts "#{dealer.name}:"
-    puts dealer.deck
+    interface.open_cards
+    interface.print_cards(user)
+    interface.print_cards(dealer)
 
     user_score = user.deck.cards_scoring
     dealer_score = dealer.deck.cards_scoring
@@ -73,30 +66,18 @@ class Game
 
     if winner
       bank.pay_to_winner(winner)
-      puts "Победитель: #{winner.name}"
+      interface.print_winner(winner)
     else
       bank.pay_to_player(user)
       bank.pay_to_player(dealer)
-      puts 'Победитель не выявлен, ничья.'
+      interface.print_not_winner
     end
-    puts user.balance
-    puts dealer.balance
   end
 
   private
 
   def rotate(player)
     player == user ? dealer : user
-  end
-
-  def select_action
-    puts [
-      'Выберите действие:',
-      '1 - Пропустить',
-      '2 - Добавить карту',
-      '3 - Открыть карты'
-    ]
-    gets.chomp
   end
 
   def select_winner(user_score, dealer_score)
