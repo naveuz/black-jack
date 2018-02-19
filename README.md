@@ -1,1 +1,3 @@
-# black-jack
+# BlackJack
+
+Run game: `ruby blackjack.rb`
